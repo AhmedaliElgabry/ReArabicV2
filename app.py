@@ -34,6 +34,10 @@ if not os.path.exists(UPLOAD_FOLDER):
 folder_path = "slidesImages"
 all_files = os.listdir(folder_path)
 
+
+
+
+
 def getTranslationInfor(original_text):
 
     output= UsedFunctions.get_gpt_translation(original_text)
@@ -56,10 +60,23 @@ def getTranslationInfor(original_text):
 
 
 
+def get_video_vtt_segments(content):
 
 
+    global seo,timeline,durations,lasttimes
+    
+    (translation, seo_output,timeline_output,englishsummary,arabicsummary)=getTranslationInfor(content)
+    UsedFunctions.save_html_to_img(englishsummary)
 
+    seo+=seo_output
+    timeline+=timeline_output
+    
+    (translationmodeloutput,durations_output,lasttimes_output,vttsummary)=UsedFunctions.createVtt(arabicsummary,translation)
+    durations.append(durations_output)
+    lasttimes.append(lasttimes_output)
 
+    UsedFunctions.generateExcelReport(content,translation,seo,timeline,englishsummary,arabicsummary,vttsummary,"Modeldata.xlsx")
+    segments = translationmodeloutput.strip().split('\n\n')
 
 def getDescriptionInfo(translation):
 
@@ -78,8 +95,6 @@ def getDescriptionInfo(translation):
     seconds_list = [UsedFunctions.timestamp_to_seconds(ts) for ts in lasttimes]
 
 
-    
-    return (translationmodeloutput, seconds_list, durations)
 
 
 
@@ -173,6 +188,8 @@ def process_with_whisper():
     return render_template('transcription.html', original_text=segments)
 
 
+
+
 @app.route('/vtt', methods=['POST'])
 def vttfile():
     """
@@ -184,6 +201,7 @@ def vttfile():
     - An error response if the uploaded file is not a valid VTT file.
     """
     global seo,timeline,lasttimes,durations
+    global seo,timeline,lasttimes,durations,video_path
     vttfile = request.files['vttfile']
     if vttfile.filename != '' and vttfile.filename.endswith('.vtt'):
         content = vttfile.read().decode('utf-8')
@@ -194,6 +212,13 @@ def vttfile():
         (translationmodeloutput,durations,lasttimes)=UsedFunctions.createVtt(arabicsummary,translation)
         
         segments = translationmodeloutput.strip().split('\n\n')
+        # get video duration 
+        duration=UsedFunctions.get_video_duration(video_path)
+        if duration<=300:
+            segments=get_video_vtt_segments(content)    
+        else:
+            spitedcontent=UsedFunctions.split_webvtt(content)
+            for i in spitedcontent:
  
         return render_template('transcription.html', original_text=segments)
     else:
@@ -283,6 +308,7 @@ def save_audio():
 
 @app.route('/save-final-audio_mode_one', methods=['POST'])
 def save_audio_mode_one():
+    
     """
     Processes the audio recording from the user.
     The recorded audio is then integrated into the original video, replacing the video's audio.
@@ -294,6 +320,7 @@ def save_audio_mode_one():
     - A new video where the audio is replaced with the user's recording.
     - An error response if no audio file is provided or if any issue arises during the process.
     """
+
     try:
         global video_path,durations,lasttimes,timeline,seo
 

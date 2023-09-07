@@ -13,8 +13,14 @@ import math
 import re
 import moviepy.editor as mp
 from PIL import Image
+from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx
+import json
+import re
+from datetime import datetime, timedelta
+import pandas as pd
 
 model="gpt-3.5-turbo-64k"
+model="gpt-3.5-turbo-32k"
 openai.api_key = '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'
 
 def extract_slide_content(text):
@@ -177,6 +183,19 @@ def get_gpt_vtt(vvt, start_timestamp="00:05:00.000"):
             - JSON with the key "VTT_File".
             '''
         },
+                  {
+              "role": "system",
+              "content": '''
+              You are a content creator tasked with creating descriptive metadata for video content. Your specialty is generating WebVTT (Web Video Text Tracks) files that serve as an overlay description for videos.
+
+              Your task is to:
+              1. Create a WebVTT file that provides a descriptive overlay for the provided text content, beginning from the timestamp {start_timestamp}. 
+
+              Return:
+              - A JSON object that includes the WebVTT-formatted description. The object should contain a single key called "VTT_File" that stores the WebVTT content.
+              '''
+          }
+          ,
         {
             "role": "user",
             "content": f"Text: {vvt}; Start Time: {start_timestamp}"
@@ -980,8 +999,174 @@ def createVtt(summary,orignalvtt):
     updatedvtt=merge_vtt_files( orignalvtt,disc)
 
     return (updatedvtt,[get_vtt_duration(disc)],[lasttimestep])
+    return (updatedvtt,[get_vtt_duration(disc)],[lasttimestep],disc)
 
 
+
+def split_with_ffmpeg(video_path):
+    """
+    Splits a video into segments using ffmpeg.
+    
+    Parameters:
+    video_path (str): The path to the video file to be split.
+
+    Returns:
+    list: A list of paths to the video segments created.
+    """
+    
+    # Command to get the total duration of the video using ffprobe
+    cmd = f'ffprobe -i "{video_path}" -show_entries format=duration -v quiet -of csv="p=0"'
+    
+    # Debugging: Print the command to the console
+    print(f"Running command: {cmd}")
+    
+    # Execute the command and get the total duration
+    try:
+        total_duration = float(subprocess.check_output(cmd, shell=True).decode('utf-8').strip())
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+        return None
+
+    # Set the duration of each segment (in seconds)
+    step = 500  # 15 minutes in seconds
+    
+    # Calculate the number of segments
+    n_segments = math.ceil(total_duration / step)
+    
+    # Initialize list to store paths to the created video segments
+    videoPaths = []
+
+    # Loop to create video segments
+    for i in range(n_segments):
+        start = i * step
+        segment_path = f'videoParts\\segment_{i+1}.mp4'
+        
+        # ffmpeg command to create a segment
+        cmd = (
+            f'ffmpeg -y -ss {start} -i "{video_path}" -c copy -t {step} '
+            f'{segment_path}'
+        )
+        
+        # Add the path of the new segment to the list
+        videoPaths.append(segment_path)
+
+        # Debugging: Print the command to the console
+        print(f"Running command: {cmd}")
+
+        # Execute the ffmpeg command
+        subprocess.run(cmd, shell=True)
+
+    # Return the list of created video segments
+    return videoPaths
+
+
+def get_video_duration(video_path):
+    """
+    Retrieves the total duration of a video using ffprobe.
+    
+    Parameters:
+    video_path (str): The path to the video file whose duration needs to be found.
+    
+    Returns:
+    float: The total duration of the video in seconds. Returns None if an error occurs.
+    """
+    
+    # Construct the ffprobe command to get the video duration
+    cmd = f'ffprobe -i "{video_path}" -show_entries format=duration -v quiet -of csv="p=0"'
+    
+    # Debugging: Print the ffprobe command to the console
+    print(f"Running ffprobe command: {cmd}")
+
+    # Try to execute the command and parse the total duration
+    try:
+        # Run the command and collect the output
+        output = subprocess.check_output(cmd, shell=True).decode('utf-8').strip()
+        
+        # Convert the output to a floating-point number
+        total_duration = float(output)
+        
+        return total_duration
+
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while trying to get the video duration: {e}")
+        return None
+    
+
+
+from datetime import datetime, timedelta
+
+def split_webvtt(content):
+    """
+    Splits a WebVTT content into segments of 15 minutes.
+    
+    Parameters:
+    content (str): The content of the WebVTT file as a string.
+    
+    Returns:
+    list: A list of strings where each string is the content of a 15-minute segment.
+    """
+    
+    segments = []  # List to hold each 15-min segment
+    current_segment = []  # Temporary list to accumulate lines for the current segment
+    current_time = timedelta()  # Time counter for the current segment
+    time_limit = timedelta(minutes=5)  # 15-min time limit for each segment
+    
+    # Split the entire content by double newline to separate each entry
+    lines = content.split('\n\n')
+    
+    i = 0  # Line counter
+    while i < len(lines):
+        line = lines[i]
+        
+        # If we find a timing line (which contains the '-->' symbol)
+        if '-->' in line:
+            # Extract timing information
+            time_line = line.split('\n')[0]
+            start_time_str, end_time_str = time_line.split('-->')
+            
+            # Convert the end time to a timedelta object
+            end_time = datetime.strptime(end_time_str.strip(), "%H:%M:%S.%f").time()
+            end_time = timedelta(hours=end_time.hour, minutes=end_time.minute,
+                                 seconds=end_time.second, microseconds=end_time.microsecond)
+            
+            # Check if adding this subtitle entry would exceed the 15-min limit
+            if end_time - current_time >= time_limit:
+                segments.append('\n\n'.join(current_segment))
+                current_segment = []
+                current_time = end_time
+            
+            # Add the current entry to the current_segment list
+            current_segment.append(lines[i])
+        
+        i += 1  # Move to the next line
+    
+    # Add any remaining content to the last segment
+    if current_segment:
+        segments.append('\n\n'.join(current_segment))
+    
+    return segments
+
+
+
+
+
+def generateExcelReport(all_content, translation, seo, timeline, englishsummary, arabicsummary, summaryvtt,excel_file_path):
+    # Create a dictionary to hold your data
+    data = {
+        "Original Text": [all_content],
+        "Translation": [translation],
+        "SEO": [seo],
+        "Timeline": [timeline],
+        "English Summary": [englishsummary],
+        "Arabic Summary": [arabicsummary],
+        "Generated Vtt For The Summary":[summaryvtt]
+    }
+
+    # Convert the dictionary to a Pandas DataFrame
+    df = pd.DataFrame(data)
+
+    # Save the DataFrame to an Excel file
+    df.to_excel(excel_file_path, index=False)
 
 
 
