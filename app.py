@@ -26,10 +26,6 @@ def time_to_seconds(time_str):
     h, m, s = time_str.split(":")
     return int(h) * 3600 + int(m) * 60 + float(s)
 
-# Create an upload directory if it doesn't exist
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
 
 folder_path = "slidesImages"
 all_files = os.listdir(folder_path)
@@ -38,26 +34,6 @@ all_files = os.listdir(folder_path)
 
 
 
-def getTranslationInfor(original_text):
-
-    output= UsedFunctions.get_gpt_translation(original_text)
-
-    response=output['response']
-    print('this is the response ',response)
-
-    # Parse the preprocessed JSON string.
-    response_data = json.loads(response,strict=False)
-
-    # Extract the 'response' string and then parse it.
-
-    # Now you can access the nested keys
-    translation = response_data.get('translation'," ")
-    seo = response_data.get('SEOkeywords'," ")
-    timeline = response_data.get('time_line'," ")
-    englishsummary=response_data.get('English_summar'," ")
-    arabicsummary=response_data.get('Arabic_summary'," ")
-    return (translation, seo,timeline,englishsummary,arabicsummary)
-
 
 
 def get_video_vtt_segments(content):
@@ -65,37 +41,15 @@ def get_video_vtt_segments(content):
 
     global seo,timeline,durations,lasttimes
     
-    (translation, seo_output,timeline_output,englishsummary,arabicsummary)=getTranslationInfor(content)
-    UsedFunctions.save_html_to_img(englishsummary)
+    (translation_list,arabicsummary_list,lasttimes)=UsedFunctions.translate_vtt_content(content)
 
-    seo+=seo_output
-    timeline+=timeline_output
-    
-    (translationmodeloutput,durations_output,lasttimes_output,vttsummary)=UsedFunctions.createVtt(arabicsummary,translation)
-    durations.append(durations_output)
-    lasttimes.append(lasttimes_output)
+    UsedFunctions.save_html_to_img(arabicsummary_list)
+    all_vtt_content, durations = UsedFunctions.process_translation_list(translation_list, arabicsummary_list, lasttimes)
 
-    UsedFunctions.generateExcelReport(content,translation,seo,timeline,englishsummary,arabicsummary,vttsummary,"Modeldata.xlsx")
-    segments = translationmodeloutput.strip().split('\n\n')
+    # UsedFunctions.generateExcelReport(content,translation,seo,timeline,ar,arabicsummary,vttsummary,"Modeldata.xlsx")
+    segments = all_vtt_content.strip().split('\n\n')
 
-def getDescriptionInfo(translation):
-
-    modelTwoOutput=UsedFunctions.get_gpt_discriptions(translation)
-    modelTwoResonse=modelTwoOutput.get('response')
-
-    modelTwoResponseData=json.loads(modelTwoResonse,strict=False)
-
-    translationmodeloutput=modelTwoResponseData.get('finalVtt'," ")
-    lasttimes=modelTwoResponseData.get('starttime'," ")
-
-    durations=modelTwoResponseData.get('durations'," ")
-
-    print(translationmodeloutput, lasttimes, durations)
-    durations =[UsedFunctions.timestamp_to_seconds(ts) for ts in durations]
-    seconds_list = [UsedFunctions.timestamp_to_seconds(ts) for ts in lasttimes]
-
-
-
+    return segments
 
 
 
@@ -143,8 +97,6 @@ def upload_video():
     elif video_url:
         # Process the video URL
         video_path,videoName = UsedFunctions.download_video(video_url)
-        print('video path is ', video_path)
-        print('video name ',videoName)
         if video_path:
             return render_template('model.html')  # You can adjust this
         else:
@@ -152,7 +104,6 @@ def upload_video():
     else:
         return 'Invalid file type or video URL', 400
 
-import math
 
 @app.route('/whisper', methods=['POST'])
 def process_with_whisper():
@@ -200,25 +151,14 @@ def vttfile():
     - The paraphrased content from the VTT file.
     - An error response if the uploaded file is not a valid VTT file.
     """
-    global seo,timeline,lasttimes,durations
-    global seo,timeline,lasttimes,durations,video_path
+    global lasttimes,durations,video_path
     vttfile = request.files['vttfile']
     if vttfile.filename != '' and vttfile.filename.endswith('.vtt'):
         content = vttfile.read().decode('utf-8')
-      
-        (translation, seo,timeline,englishsummary,arabicsummary)=getTranslationInfor(content)
-        UsedFunctions.save_html_to_img(englishsummary)
-        
-        (translationmodeloutput,durations,lasttimes)=UsedFunctions.createVtt(arabicsummary,translation)
-        
-        segments = translationmodeloutput.strip().split('\n\n')
+
+        print(content)
         # get video duration 
-        duration=UsedFunctions.get_video_duration(video_path)
-        if duration<=300:
-            segments=get_video_vtt_segments(content)    
-        else:
-            spitedcontent=UsedFunctions.split_webvtt(content)
-            for i in spitedcontent:
+        segments=get_video_vtt_segments(content)
  
         return render_template('transcription.html', original_text=segments)
     else:

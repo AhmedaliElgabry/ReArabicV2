@@ -14,12 +14,12 @@ import re
 import moviepy.editor as mp
 from PIL import Image
 from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx
-import json
-import re
 from datetime import datetime, timedelta
-import pandas as pd
+import json
+import threading
+import queue
 
-model="gpt-3.5-turbo-64k"
+
 model="gpt-3.5-turbo-32k"
 openai.api_key = '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'
 
@@ -39,7 +39,6 @@ def extract_slide_content(text):
 
 
 
-import openai
 def generate_combined_vtt(vtt_content):
     openai.api_key = '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'
 
@@ -84,8 +83,7 @@ def generate_combined_vtt(vtt_content):
         return ""
 
 
-
-def save_html_to_img(slide_summaries):
+def save_html_to_img(slide_summaries_list):
     # Configurations for imgkit
     if platform.system() == 'Windows':
         wkhtmltoimage_path = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'
@@ -94,95 +92,34 @@ def save_html_to_img(slide_summaries):
     
     config = imgkit.config(wkhtmltoimage=wkhtmltoimage_path)
     
-    slide_content = slide_summaries.strip()
-    if slide_content:
-        # Enhanced styling for the slide summary in HTML format
-        # Enhanced styling for the slide summary in HTML format
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
+    for index, slide_content in enumerate(slide_summaries_list, start=1):
+        slide_content = slide_content.strip()
+        if slide_content:
+            # Enhanced styling for the slide summary in HTML format
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Slide {index}</title>
+                <!-- Styles are kept as they were, no change here -->
+            </head>
+            <body>
+                <div class="slide-container">
+                    <h1>Slide {index}</h1>
+                    <p>{slide_content}</p>
+                </div>
+            </body>
+            </html>
+            """
 
-        <head>
-            <title>Slide {1}</title>
-            <style>
-                body {{
-                    font-family: 'Arial', sans-serif;
-                    padding: 60px;
-                    text-align: center;
-                    background: linear-gradient(to bottom, #F7F8FC, #D7DAE5);
-                    color: #333;
-                    font-size: 18px;
-                    line-height: 1.6;
-                }}
-
-                div.slide-container {{
-                    background-color: #fff;
-                    padding: 60px 40px;
-                    border-radius: 15px;
-                    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
-                    max-width: 900px;
-                    margin: 0 auto;
-                    position: relative;
-                }}
-
-                h1 {{
-                    font-size: 36px;
-                    border-bottom: 2px solid #333;
-                    padding-bottom: 20px;
-                    margin-bottom: 30px;
-                    font-weight: bold;
-                    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-                }}
-
-                p {{
-                    text-align: justify;
-                    margin: 0 auto;
-                    max-width: 750px;
-                }}
-
-                div.footer {{
-                    position: absolute;
-                    bottom: 20px;
-                    right: 30px;
-                    font-size: 14px;
-                    color: #666;
-                }}
-                
-
-                
-            </style>
-        </head>
-
-        <body>
-            <div class="slide-container">
-                <h1>Slide {1}</h1>
-                <p>{slide_content}</p>
-            </div>
-        </body>
-
-        </html>
-        """
-
-        # Save the slide as an image
-
-        filename = f'slidesImages/slide_{1}.png'
-        imgkit.from_string(html_content, filename, config=config)
+            # Save the slide as an image
+            filename = f'slidesImages/slide_{index}.png'
+            imgkit.from_string(html_content, filename, config=config)
         
     print("Slides saved as images!")
 
 def get_gpt_vtt(vvt, start_timestamp="00:05:00.000"):
     messages = [
-        {
-            "role": "system",
-            "content": '''
-            you are a content creator 
-            Perform two tasks:
-            1. Create a WebVTT file from the provided text starting from the timestamp {start_timestamp}.
-            
-            Return:
-            - JSON with the key "VTT_File".
-            '''
-        },
                   {
               "role": "system",
               "content": '''
@@ -319,93 +256,6 @@ def whisperModel(file):
         text = r'{}'.format(whisper_response)
 
         return text
-
-def get_gpt_translation(vvt):
-
-    openai.api_key = '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'
-    messages=[
-        {
-            "role": "system",
-            "content":
-            '''
-            You are a skilled translator tasked with translating English captions in the WebVTT format to Egyptian Arabic ammiya (بالعامية المصرية).
-            Your goal is to ensure accurate translation while preserving the timing cues and formatting.
-
-            Special Goals:
-            1. Translate the provided English VTT captions into Egyptian Arabic, making sure to match the original timing cues and formatting.
-            2. Include SEO keywords in the translation that would optimize the video's appearance in YouTube search results.
-            3. Preserve the timeline of the video, for example:
-            0:16 Introduction
-            3:11 Rules of Engagement
-            4. English summary for the vtt content in English Language
-            5.Arabic summary for the vtt content in Egyptian Arabic
-            ...
-
-            Format:
-            You should provide the translated captions in WebVTT format with the corresponding Egyptian Arabic translation.
-            Your translation should be fluent, clear, and accurate.
-            '''
-
-
-
-            },
-
-    {"role": "user", "content": vvt},
-
-      ]
-    response = openai.ChatCompletion.create(
-    model="gpt-4",
-    messages=messages,
-    temperature=0,
-    top_p=1,
-    frequency_penalty=0,
-    presence_penalty=0,
-      functions=[
-        {
-
-            "name": "translation",
-            "description": "translate vtt file and provid eaddational info",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "translation": {
-                          "type": "string",
-                          "description": "Content translated from the provided VTT file into Egyptian Arabic (العاميه المصريه) presented in VTT format, ensuring retention of original formatting and timing cues."
-                      },
-
-                  "SEOkeywords": {
-                          "type": "string",
-                          "description": "Strategically chosen keywords to enhance the video's discoverability on YouTube, ensuring it ranks higher in search results."
-                      },
-                      "time_line": {
-                          "type": "string",
-                          "description": "A structured breakdown of the video content, specifying the start times and associated titles or topics for each segment."
-                      },
-                    "English_summar":{
-                        "type":"string",
-                        "description": "summary for the vtt content in English"
-
-                    },
-                    "Arabic_summary":{
-                        "type":"string",
-                        "description": "summary for the vtt content in Egyptian Arabic"
-
-                    }
-
-                },
-
-                "required": ["trasnlation", "SEOkeywyords","time_line","English_summar","Arabic_summary"],
-            },
-        }
-            ],
-        function_call={"name": "translation"},
-        )
-
-    reply_content = response.choices[0].message
-    response_options = reply_content.to_dict()['function_call']['arguments']
-    tokens=response.usage.total_tokens
-    output={'response':response_options,'tokens':tokens}
-    return output
 
 
 
@@ -701,7 +551,6 @@ def insert_images_into_video(video_path, image_paths, insert_times, image_durati
     final_video.write_videofile('output_video.mp4', codec='mpeg4', bitrate="1000k")
 
 
-from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx
 
 def split_and_adjust_video_moviepy(input_path, durations, required_length):
     # Load video
@@ -919,7 +768,6 @@ def prepare_video_segments(video_path, segments_list, num_lines):
 
 
 
-import re
 
 def get_last_timestep_from_vtt(vtt_str):
     # Regular expression to match WebVTT time steps
@@ -935,11 +783,6 @@ def get_last_timestep_from_vtt(vtt_str):
     else:
         return "No time steps found"
 
-import json
-
-
-import re
-from datetime import datetime, timedelta
 
 def get_vtt_duration(vtt_str):
     # Regular expression to match WebVTT time steps
@@ -984,9 +827,7 @@ def merge_vtt_files(vtt1_str, vtt2_str):
     
     return merged_vtt
 
-def createVtt(summary,orignalvtt):
-
-    lasttimestep=get_last_timestep_from_vtt(orignalvtt)
+def createVtt(summary,orignalvtt,lasttimestep):
 
     gptresponde=get_gpt_vtt(summary,lasttimestep)
 
@@ -998,8 +839,7 @@ def createVtt(summary,orignalvtt):
 
     updatedvtt=merge_vtt_files( orignalvtt,disc)
 
-    return (updatedvtt,[get_vtt_duration(disc)],[lasttimestep])
-    return (updatedvtt,[get_vtt_duration(disc)],[lasttimestep],disc)
+    return (updatedvtt,get_vtt_duration(disc))
 
 
 
@@ -1093,7 +933,6 @@ def get_video_duration(video_path):
     
 
 
-from datetime import datetime, timedelta
 
 def split_webvtt(content):
     """
@@ -1150,23 +989,207 @@ def split_webvtt(content):
 
 
 
-def generateExcelReport(all_content, translation, seo, timeline, englishsummary, arabicsummary, summaryvtt,excel_file_path):
-    # Create a dictionary to hold your data
-    data = {
-        "Original Text": [all_content],
-        "Translation": [translation],
-        "SEO": [seo],
-        "Timeline": [timeline],
-        "English Summary": [englishsummary],
-        "Arabic Summary": [arabicsummary],
-        "Generated Vtt For The Summary":[summaryvtt]
+# def generateExcelReport(all_content, translation, seo, timeline, englishsummary, arabicsummary, summaryvtt,excel_file_path):
+#     # Create a dictionary to hold your data
+#     data = {
+#         "Original Text": [all_content],
+#         "Translation": [translation],
+#         "SEO": [seo],
+#         "Timeline": [timeline],
+#         "English Summary": [englishsummary],
+#         "Arabic Summary": [arabicsummary],
+#         "Generated Vtt For The Summary":[summaryvtt]
+#     }
+
+#     # Convert the dictionary to a Pandas DataFrame
+#     df = pd.DataFrame(data)
+
+#     # Save the DataFrame to an Excel file
+#     df.to_excel(excel_file_path, index=False)
+
+
+def extract_text_from_vtt(vtt):
+    """
+    Extracts subtitle text and their corresponding timestamps from a VTT formatted string.
+
+    Args:
+    - vtt (str): The VTT formatted string containing subtitles.
+
+    Returns:
+    - tuple: A tuple containing two lists:
+             1. List of timestamps.
+             2. List of extracted subtitles.
+    """
+    
+    # Remove any leading or trailing whitespace
+    cleaned_vtt = vtt.strip()
+    
+    # Split the VTT content into distinct subtitle blocks using double newline as a delimiter
+    blocks = cleaned_vtt.split("\n\n")
+    
+    # Extract the timestamps and text.
+    timestamps = [block.splitlines()[0] for block in blocks if block.splitlines()[0] != "WEBVTT"]
+
+    # Remove semicolons from the text and then join the cleaned subtitles with semicolons.
+    subtitle_texts = ['\n'.join(block.splitlines()[1:]).replace(';', '') for block in blocks if block.splitlines()[0] != "WEBVTT"]
+    
+    return timestamps,subtitle_texts
+
+
+
+
+
+def get_gpt_translation(input):
+   
+   
+    messages = [
+    {
+        "role": "system",
+        "content": '''
+        You are a skilled translator with a specific task. You will be given a list of English sentences. For each and every sentence in the list:
+        1) Translate it into Egyptian Arabic ammiya (بالعامية المصرية).
+        2) Ensure the translated list is of the SAME length as the input list.
+        3) Provide a summary of the entire content in Egyptian Arabic ammiya (بالعامية المصرية).
+
+        Example: 
+        Input: ["Hello", "How are you?", "Thank you"]
+        Expected Output: ["مرحبا", "ازيك؟", "شكراً"]
+
+        Note: If you can't translate a sentence, return the original sentence in the output list. Do NOT skip any sentence.
+        '''
+    },
+    {
+        "role": "user",
+        "content": input
     }
+]
 
-    # Convert the dictionary to a Pandas DataFrame
-    df = pd.DataFrame(data)
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=messages,
+        temperature=0,
+    functions = [
+    {
+        "name": "translation_list_with_example_v5",  # Incremented version for clarity
+        "description": "Translate EACH item from the given list of English content to Egyptian Arabic ammiya (بالعامية المصرية). The returned translation list MUST have the same length as the input list, ensuring a direct 1:1 correspondence. If a translation for a specific item isn't possible, the original item should be returned in its place.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "translation": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of translated items. Each translated item should directly correspond to the respective item in the input list. If translation isn't possible for an item, the original should be retained."
+                },
 
-    # Save the DataFrame to an Excel file
-    df.to_excel(excel_file_path, index=False)
+                "summary": {
+                    "type":"string",
+                    "description": "A concise summary of the entire content in Egyptian Arabic ammiya (بالعامية المصرية)."
+                }
+            },
+            "required": ["translation", "summary"]
+        }
+    }
+]
+
+,
+
+        function_call={"name": "translation_list_with_example_v5"},
+    )
+
+    reply_content = response.choices[0].message
+    response_options = reply_content.to_dict()['function_call']['arguments']
+    tokens = response.usage
+    output = {'response': response_options, 'tokens': tokens}
+    return output
+
+
+
+
+
+def threaded_translation(index, sublist, output_dict):
+    sublist_string = json.dumps(sublist)
+    translation_output = get_gpt_translation(sublist_string)
+
+    response = translation_output['response']
+    response_data = json.loads(response, strict=False)
+
+    translated_data = response_data.get('translation', [])
+    summary_data = response_data.get('summary', "")
+
+    # Append empty strings to translated_data until its length matches sublist
+    while len(translated_data) < len(sublist):
+        translated_data.append("")
+
+    output_dict[index] = (translated_data, summary_data)
+
+
+def translate_vtt_content(original_text):
+    timeline, text = extract_text_from_vtt(original_text)
+    sublist_size = 50
+    sublists = [text[i:i + sublist_size] for i in range(0, len(text), sublist_size)]
+    timeline_list=[timeline[i:i + sublist_size] for i in range(0, len(timeline), sublist_size)]
+    # Capture the corresponding last timestamp for each sublist
+    sublist_last_timestamps = [timeline[min(i + sublist_size - 1, len(timeline) - 1)] for i in range(0, len(timeline), sublist_size)]
+    sublist_last_timestamps_endtimes = [i.split('-->')[1].strip() for i in sublist_last_timestamps]
+    # Use a dictionary to hold the results with the index as the key
+    output_dict = {}
+
+    threads = []
+    for i, sublist in enumerate(sublists):
+        # Pass the index to the threaded function
+        t = threading.Thread(target=threaded_translation, args=(i, sublist, output_dict))
+        t.start()
+        threads.append(t)
+
+    # Wait for all threads to complete
+    for t in threads:
+        t.join()
+
+    # Sort results based on the index and reassemble them
+    all_translations = []
+    summary = []
+    for i in range(len(sublists)):
+        translated_data, summary_data = output_dict[i]
+        summary.append(summary_data)
+        combined_list = [f"{x}\n{y}" for x, y in zip(timeline_list[i], translated_data)]
+        all_translations.append(combined_list)
+
+    return (all_translations, summary, sublist_last_timestamps_endtimes)
+
+
+def threaded_create_vtt(index, summary, original_vtt, last_timestep, results):
+    translation_model_output, durations_output = createVtt(summary, original_vtt, last_timestep)
+    results[index] = (translation_model_output, durations_output)
+
+def process_translation_list(translation_list, arabicsummary_list, lasttimes):
+    # A list to hold thread instances
+    threads = []
+    
+    # A dictionary to store the results from threads
+    results = {}
+    
+    # Start threads to process the VTT creation
+    for i in range(len(translation_list)):
+        t = threading.Thread(target=threaded_create_vtt, args=(i, arabicsummary_list[i], '\n\n'.join(translation_list[i]), lasttimes[i], results))
+        threads.append(t)
+        t.start()
+    
+    # Wait for all threads to complete
+    for t in threads:
+        t.join()
+
+    # Extract results from the results dictionary and maintain original order
+    durations = []
+    all_vtt_content = ''
+    for i in range(len(translation_list)):
+        translation_model_output, durations_output = results[i]
+        durations.append(durations_output)
+        all_vtt_content += '\n\n' + translation_model_output
+
+    return all_vtt_content, durations
+
 
 
 
