@@ -75,10 +75,7 @@ def generate_combined_vtt(vtt_content):
 
 def save_html_to_img(slide_data_list):
     # Configurations for imgkit
-    if platform.system() == 'Windows':
-        wkhtmltoimage_path = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'
-    else:
-        wkhtmltoimage_path = r'C:\Users\fatma taha\Desktop\programmingProjects\FlaskProject\wkhtmltox\wkhtmltoimage'
+    wkhtmltoimage_path = r'wkhtmltox\wkhtmltoimage.exe''
     
     config = imgkit.config(wkhtmltoimage=wkhtmltoimage_path)
 
