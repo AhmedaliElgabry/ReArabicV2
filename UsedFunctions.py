@@ -72,71 +72,69 @@ def generate_combined_vtt(vtt_content):
         print(f"Error: {e}")
         return ""
 
+from html2image import Html2Image
 
 def save_html_to_img(slide_data_list):
-    # Configurations for imgkit
-    wkhtmltoimage_path = r'wkhtmltox\wkhtmltoimage.exe''
-    
-    config = imgkit.config(wkhtmltoimage=wkhtmltoimage_path)
+    hti = Html2Image()
+
+    css = """
+    body {
+        font-family: 'Arial', sans-serif;
+        padding: 60px;
+        text-align: center;
+        background: linear-gradient(to bottom, #F7F8FC, #D7DAE5);
+        color: #333;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+    div.slide-container {
+        background-color: #fff;
+        padding: 60px 40px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+    }
+    h1 {
+        font-size: 36px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+        font-weight: bold;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    p, ul {
+        text-align: justify;
+        margin: 0 auto;
+        max-width: 750px;
+    }
+    ul {
+        list-style-type: disc;
+        padding-left: 25px;
+    }
+    li {
+        margin-bottom: 15px;
+    }
+    div.footer {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        font-size: 14px;
+        color: #666;
+    }
+    """
 
     for index, slide_data in enumerate(slide_data_list):
         slide_title = slide_data["Slide"]["Title"]
         points = slide_data["Slide"]["Points"]
         formatted_points = "".join([f"<li>{point}</li>" for point in points])
 
-        # Enhanced styling for the slide in HTML format
         html_content = f"""
         <!DOCTYPE html>
         <html>
         <head>
             <title>Slide {index + 1}</title>
-            <style>
-                body {{
-                    font-family: 'Arial', sans-serif;
-                    padding: 60px;
-                    text-align: center;
-                    background: linear-gradient(to bottom, #F7F8FC, #D7DAE5);
-                    color: #333;
-                    font-size: 18px;
-                    line-height: 1.6;
-                }}
-                div.slide-container {{
-                    background-color: #fff;
-                    padding: 60px 40px;
-                    border-radius: 15px;
-                    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
-                    max-width: 900px;
-                    margin: 0 auto;
-                    position: relative;
-                }}
-                h1 {{
-                    font-size: 36px;
-                    border-bottom: 2px solid #333;
-                    padding-bottom: 20px;
-                    margin-bottom: 30px;
-                    font-weight: bold;
-                    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-                }}
-                p, ul {{
-                    text-align: justify;
-                    margin: 0 auto;
-                    max-width: 750px;
-                }}
-                ul {{
-                    list-style-type: disc;
-                    padding-left: 25px;
-                }}
-                li {{
-                    margin-bottom: 15px;
-                }}
-                div.footer {{
-                    position: absolute;
-                    bottom: 20px;
-                    right: 30px;
-                    font-size: 14px;
-                    color: #666;
-                }}
-            </style>
         </head>
         <body>
             <div class="slide-container">
@@ -149,9 +147,8 @@ def save_html_to_img(slide_data_list):
         </html>
         """
 
-        # Save the slide as an image
         filename = f'slidesImages/slide_{index + 1}.png'
-        imgkit.from_string(html_content, filename, config=config)
+        hti.screenshot(html_str=html_content, css_str=css, save_as=filename)
         
     print("Slides saved as images!")
 
