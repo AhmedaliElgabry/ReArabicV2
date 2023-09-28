@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Basic Page Needs -->
+        <meta charset="utf-8">
+        <title>recording</title>
+      
+        <!-- Mobile Specific Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Corporate Html5 Template">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+        <meta name="author" content="Themefisher">
+        <meta name="generator" content="Themefisher Rearabic HTML Template v1.0">
+        
+            
+        <meta name="theme-name" content="reaching" />
+      
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/bootstrap/bootstrap.min.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/animate-css/animate.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fontawesome/css/all.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fonts/Pe-icon-7-stroke.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/themify/css/themify-icons.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/slick-carousel/slick/slick.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/slick-carousel/slick/slick-theme.css') }}">
+      
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      
+      <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/x-icon">
+      
+        <!-- JS Scripts -->
+        <!-- ... (Your existing JS scripts) ... -->
+    </head>
+    <body class="bg-light">
+    <!-- NAVBAR
+    ================================================= -->
+    <nav class="navbar navbar-expand-lg navbar-dark trans-navigation fixed-top navbar-togglable">
+        <div class="container">
+          <a class="navbar-brand" href="index-3.html">
+            <h3>reaching</h3>
+          </a>
+          <!-- Toggler -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="fa fa-bars"></span>
+          </button>
+      
+          <!-- Collapse -->
+          <div class="collapse navbar-collapse has-dropdown" id="navbarCollapse">
+            <!-- Links -->
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#!" id="navbarWelcome" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  Home
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarWelcome">
+                  <li><a class="dropdown-item" href="index.html">Home-1</a></li>
+                  <li><a class="dropdown-item" href="index-2.html">Home-2</a></li>
+                  <li><a class="dropdown-item" href="index-3.html">Home-3</a></li>
+                  <li><a class="dropdown-item" href="index-4.html">Home-4</a></li>
+      
+                  <li class="dropdown dropdown-submenu dropright">
+                    <a class="dropdown-item dropdown-toggle" href="#!" id="dropdown0301" role="button"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub Menu</a>
+      
+                    <ul class="dropdown-menu" aria-labelledby="dropdown0301">
+                      <li><a class="dropdown-item" href="index.html">Submenu 01</a></li>
+                      <li><a class="dropdown-item" href="index.html">Submenu 02</a></li>
+                    </ul>
+                  </li>
+      
+                  <li class="dropdown dropdown-submenu dropleft">
+                    <a class="dropdown-item dropdown-toggle" href="#!" id="dropdown0301" role="button"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub Menu</a>
+      
+                    <ul class="dropdown-menu" aria-labelledby="dropdown0301">
+                      <li><a class="dropdown-item" href="index.html">Submenu 01</a></li>
+                      <li><a class="dropdown-item" href="index.html">Submenu 02</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item ">
+                <a href="about.html" class="nav-link js-scroll-trigger">
+                  About
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a href="service.html" class="nav-link js-scroll-trigger">
+                  Services
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a href="pricing.html" class="nav-link js-scroll-trigger">
+                  Pricing
+                </a>
+              </li>
+      
+              <li class="nav-item ">
+                <a href="project.html" class="nav-link js-scroll-trigger">
+                  Projects
+                </a>
+              </li>
+      
+              <li class="nav-item ">
+                <a href="contact.html" class="nav-link">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div> <!-- / .navbar-collapse -->
+        </div> <!-- / .container -->
+      </nav>
+    
+        <!-- HERO -->
+<section class="page-banner-area page-about">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-md-12 col-12 text-center">
+                <div class="page-banner-content">
+                    <h1 class="display-4 font-weight-bold">Professional Voice-Over Services</h1>
+                    <p>Enhance your projects with high-quality voice-overs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="container mt-5 mb-5">
+    <h1 class="text-center">Recording Page</h1>
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header text-center bg-primary text-white">Current Segment</div>
+          <div class="card-body">
+            <div id="splitContainer" class="row">
+              
+              <!-- Segments Section -->
+              <div class="segments-section col-md-6">
+                <div class="transcription-box p-3" id="displayArea"></div>
+                
+                <div id="messageBox" class="message-box"></div>
+              </div>
+              
+              <!-- Video Section -->
+              <div class="video-section col-md-6">
+                <div class="card mt-4 h-100">
+                  <div class="card-header bg-secondary text-white">Videos</div>
+                  <div class="card-body"> <!-- Set fixed height and auto scroll -->
+                    <div id="videoContainer" ></div>
+                  </div>
+                </div>
+              </div>
+              
+            </div> <!-- End of splitContainer -->
+
+          <!-- Buttons and Time Section -->
+<div class="row mt-3"> <!-- Converted to row to place under the segments and the video -->
+    <div class="col-md-12">
+      
+      <!-- Centering the time div -->
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 50px;">
+        <div>
+          <div class="mt-3 text-center">Recording Time for Current Segment: <span id="segmentTimer">00:00:00</span></div>
+          <div class="mt-3 text-center">Total Recording Time: <span id="totalTimer">00:00:00</span></div>
+        </div>
+      </div>
+      
+      <div class="button-group d-flex justify-content-center">
+        <button id="startRecording" class="btn btn-success btn-lg">Start Recording</button>
+        <button id="stopRecording" class="btn btn-danger btn-lg">Stop Recording</button>
+        <button id="play" class="btn btn-info btn-lg">Play</button>
+        <button id="nextButton" class="btn btn-primary btn-lg">Next Sentences</button>
+        <button id="sendAudioButton" class="btn btn-primary btn-lg" style="display:none;">Send Audio</button>
+      </div>
+    </div>
+  </div>
+  
+          </div> <!-- End of card-body -->
+        </div> <!-- End of card -->
+      </div> <!-- End of col-md-12 -->
+    </div> <!-- End of row -->
+</section>
+
+    
+    
+    <footer class="section " id="footer">
+        <div class="overlay footer-overlay"></div>
+        <!--Content -->
+        <div class="container">
+          <div class="row justify-content-start">
+            <div class="col-lg-4 col-sm-12">
+              <div class="footer-widget">
+                <!-- Brand -->
+                <a href="index.html" class="footer-brand text-white">
+                  reaching
+                </a>
+                <p>Each theme featured at the Bootstrap marketplace has been reviewed by Bootstrap's creators.Lorem ipsum
+                  dolor sit amet, consectetur adipisicing elit.</p>
+              </div>
+            </div>
+     
+            <div class="col-lg-3 ml-lg-auto col-sm-12">
+              <div class="footer-widget">
+                <h3>Account</h3>
+                <!-- Links -->
+                <ul class="footer-links ">
+                  <li>
+                    <a href="#!">
+                      Terms and conditions
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Privacy policy
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Affiliate services
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Help and support
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Frequently Asked Question
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+     
+     
+            <div class="col-lg-2 col-sm-6">
+              <div class="footer-widget">
+                <h3>About</h3>
+                <!-- Links -->
+                <ul class="footer-links">
+                 <li>
+                   <a href="about.html">
+                     About Us
+                   </a>
+                 </li>
+                  <li>
+                    <a href="service.html">
+                      Services
+                    </a>
+                  </li>
+                  <li>
+                    <a href="pricing.html">
+                      Pricing
+                    </a>
+                  </li>
+                  <li>
+                    <a href="project.html">
+                     Recent Projects
+                    </a>
+                  </li>
+     
+                  <li>
+                    <a href="contact.html">
+                      Contact
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+     
+            <div class="col-lg-2 col-sm-6">
+              <div class="footer-widget">
+                <h3>Socials</h3>
+                <!-- Links -->
+                <ul class="list-unstyled footer-links">
+                  <li><a href="https://www.facebook.com/themefisher"><i class="fab fa-facebook-f"></i>Facebook</a></li>
+                  <li>
+                    <a href="https://www.twitter.com/themefisher"><i class="fab fa-twitter"></i>Twitter
+                    </a></li>
+                  <li><a href="https://www.pinterest.com/themefisher/"><i class="fab fa-pinterest-p"></i>Pinterest
+                    </a></li>
+                  <li><a href="https://themefisher.com/"><i class="fab fa-linkedin"></i>linkedin
+                    </a></li>
+                  <li><a href="https://www.youtube.com/channel/UCx9qVW8VF0LmTi4OF2F8YdA"><i class="fab fa-youtube"></i>YouTube
+                    </a></li>
+                </ul>
+              </div>
+            </div>
+          </div> <!-- / .row -->
+     
+     
+          <div class="row text-right pt-5">
+            <div class="col-lg-12">
+              <div class="overflow-hidden">
+                <!-- Copyright -->
+               <p class="footer-copy">
+                 Copyright &copy; <script>var CurrentYear = new Date().getFullYear()
+                 document.write(CurrentYear)
+               </script>. Designed &amp; Developed by <a class="current-year" href="https://themefisher.com/">Themefisher</a>
+               </p>
+              </div>
+            </div>
+          </div> <!-- / .row -->
+        </div> <!-- / .container -->
+      </footer>
+     
+  <!-- jQuery -->
+  <script src="{{ url_for('static', filename='plugins/jquery/jquery.min.js') }}"></script>
+  <!-- Bootstrap -->
+  <script src="{{ url_for('static', filename='plugins/bootstrap/bootstrap.min.js') }}"></script>
+  <!-- Slick Slider -->
+  <script src="{{ url_for('static', filename='plugins/slick-carousel/slick/slick.min.js') }}"></script>
+  
+  <!-- Your custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/script.js') }}">
+
+  </script>
+    
+    
+    
+    
+    <script>
+           // Global variables
+            var segments = '{{ segments|tojson|safe }}';
+            var delimiter = '||';
+            var splitArray = segments.split(delimiter);
+            if (splitArray[0].includes("WEBVTT")) {
+                splitArray = splitArray.slice(1);
+            }
+            console.log(splitArray)
+            let combinedChunks = [];
+            let isRecording = false;
+            let currentIndex = 0;
+            let mediaRecorder; // Declare mediaRecorder here at the top level for global access.
+            let elapsedTime = 0; // Store elapsed time in seconds
+            let segmentTime = 0; // Holds the duration of the current recording segment
+            let segmentInterval;  // For the current segment timer
+            let timerInterval;    // For the total recording timer
+
+            let expectedSegmentTime=0
+            let lastRecordingChunks = []; // New variable for storing the last recording
+
+            let accualeDuration=[]
+            let expectedDuration=[]
+            
+            let num_lines = parseInt('{{num_lines}}');
+            console.log(num_lines);  // Now it will be an integer
+
+            var videosSegments = '{{videosPaths|tojson|safe}}';
+            // Remove the first and last character which should be the quotes
+            videosSegments = videosSegments.substring(1, videosSegments.length - 1);
+            var videosPsths = videosSegments.split("||");
+            console.log(videosPsths);
+            let currentVideoIndex = 0;
+
+
+
+            function calculateVTTCaptionDuration(vttContent) {
+                let totalDuration = 0;
+
+                const timePattern = /(\d{2}:\d{2}:\d{2}\.\d{3}) --\> (\d{2}:\d{2}:\d{2}\.\d{3})/g;
+                let match;
+
+                while (match = timePattern.exec(vttContent)) {
+                    const start = match[1].split(':').map(parseFloat);
+                    const end = match[2].split(':').map(parseFloat);
+
+                    const startSeconds = start[0] * 3600 + start[1] * 60 + parseFloat(start[2]);
+                    const endSeconds = end[0] * 3600 + end[1] * 60 + parseFloat(end[2]);
+
+                    totalDuration += endSeconds - startSeconds;
+                }
+
+                return totalDuration;
+            }
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            /**
+             * Starts recording audio.
+             * This function initiates the recording process, clears previously recorded data for the segment, 
+             * and manages the media recording lifecycle. It accesses the device's microphone and initiates 
+             * the segment timer. Upon successful access, it configures the mediaRecorder object's behavior 
+             * during the recording session, such as gathering chunks of audio data and handling the stop event.
+             */
+
+
+            function startRecording() {
+                lastRecordingChunks = []; // Clear the last recording for the current segment
+                console.log('current len is ',lastRecordingChunks)
+                console.log('combined is ',combinedChunks)
+                startSegmentTimer();
+
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = event => {
+                            lastRecordingChunks.push(event.data); // Add the new chunk
+                        };
+                        mediaRecorder.start();
+                        isRecording = true;
+                        updateButtonState();
+                        mediaRecorder.onstop = () => {
+                            isRecording = false;
+                            updateButtonState();
+                            console.log('Last recording chunks:', lastRecordingChunks); // Diagnostic output
+                        };
+                    })
+                    .catch(error => {
+                        console.error('Error accessing the microphone or starting recording:', error);
+                    });
+            }
+        
+
+                        
+            /**
+            * Starts the timer for the current recording segment.
+            * Initializes and displays the segment timer to 00:00:00 and begins counting in centiseconds.
+            * The timer provides a visual indication of the length of the current recording segment.
+            */
+            function startSegmentTimer() {
+                segmentTime = 0;
+                document.getElementById('segmentTimer').textContent = '00:00:00'; // Initialize with 00:00:00
+                clearInterval(segmentInterval); 
+                segmentInterval = setInterval(() => {
+                    segmentTime += 0.01; 
+                    document.getElementById('segmentTimer').textContent = formatTime(segmentTime);
+                }, 10); 
+            }
+
+            /**
+             * Stops the segment timer.
+             * This function halts the ongoing interval that increments the segment timer. It is used when 
+             * stopping the recording to ensure that the timer no longer increments.
+             */
+            function stopSegmentTimer() {
+                clearInterval(segmentInterval);
+            }
+
+            /**
+             * Format given time into MM:SS:CS format (Minutes, Seconds, Centiseconds).
+             * @param {number} time - The time value to format.
+             * @returns {string} - Returns a string representation of the time in a human-readable format.
+             */
+            function formatTime(time) {
+                let minutes = Math.floor(time / 60);
+                let seconds = Math.floor(time % 60);
+                let fractions = Math.floor((time % 1) * 100); // gets the fractional part in centiseconds (1/100th of a second)
+                return `${pad(minutes)}:${pad(seconds)}:${pad(fractions)}`;
+            }
+            /**
+             * Pads the given number with a leading zero if it's less than 10.
+             * This helper function ensures that all displayed numbers are at least two digits, providing 
+             * a consistent visual format for times.
+             * @param {number} number - The number to pad.
+             * @returns {string} - Returns a two-digit representation of the number.
+             */
+            function pad(number) {
+                return number < 10 ? '0' + number : number;
+            }
+
+
+            /**
+             * Plays back the last recorded audio segment.
+             * The function generates an audio player from the recorded audio chunks and initiates playback. 
+             * It ensures that the generated object URL for the audio data is properly garbage collected after 
+             * playback is completed.
+             */          
+            function play() {
+                const audioBlob = new Blob(lastRecordingChunks, { type: 'audio/webm' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                
+                audio.onended = function() {
+                    URL.revokeObjectURL(audioUrl);  // Revoke the URL once done
+                };
+                
+                audio.play().catch(error => {
+                    console.error('Error playing audio:', error);
+                });
+            }
+
+
+
+
+            /**
+             * Advances to the next text segment and updates the recording storage.
+             * Appends the last recorded segment to the main recording storage, resets the last recorded chunks, 
+             * updates the elapsed time, and displays the next text segment for recording. It also manages the 
+             * UI display for completing all segments.
+             */           
+             function nextSegment() {
+
+                
+                // Adding the segment's time to the total time
+                console.log('this iis ths seqmenttime',segmentTime) 
+                console.log('the diferr',Math.abs(segmentTime - expectedSegmentTime))             
+                expectedDuration.push(expectedSegmentTime)
+                accualeDuration.push(segmentTime)
+                console.log(expectedDuration)
+                console.log(accualeDuration)
+                combinedChunks = [...combinedChunks, ...lastRecordingChunks];  // Append the last recording to the combined recordings
+                console.log('combined is ',combinedChunks)
+                lastRecordingChunks = [];  // Clear the last recording
+                // Adding the segment's time to the total time
+                elapsedTime += segmentTime;
+                document.getElementById('totalTimer').textContent = formatTime(elapsedTime);
+                document.getElementById('totalTimer').textContent = formatTime(elapsedTime);
+                if (currentIndex >= splitArray.length) {  // No more segments to show
+                        console.log('No more segments to show'); // Debug line
+                        document.getElementById('sendAudioButton').style.display = 'block'; 
+                        document.getElementById('nextButton').style.display = 'none'; 
+                    } else {
+                        // Determine the next segment's end index
+                        const nextIndex = Math.min(currentIndex + num_lines, splitArray.length);
+                        console.log('Next Index:', nextIndex); // Debug line
+                        const remainingLines = splitArray.length - currentIndex;
+
+                        // Check if remaining lines are less than num_lines
+                        if (remainingLines < num_lines) {
+                            console.log('Remaining lines are less than num_lines'); // Debug line
+                            displaySentences(currentIndex, currentIndex + remainingLines);  // Only display remaining lines
+                            currentIndex = currentIndex + remainingLines;  // Update currentIndex
+                        } else {
+                            console.log('Displaying new set of lines'); // Debug line
+                            displaySentences(currentIndex, nextIndex);  // Display the sentences
+                            currentIndex = nextIndex;  // Update currentIndex for next iteration
+                        }
+                    }
+    
+            
+
+               
+        }
+            
+           
+            document.getElementById('sendAudioButton').addEventListener('click', function() {
+                this.disabled = true;
+                sendAudioData();
+            });
+
+
+            /**
+             * Packages and sends the combined audio data to the server.
+             * This function prepares the recorded audio as a Blob and appends it to a FormData object. It then 
+             * makes a POST request to the server endpoint to save the final combined audio. On a successful response,
+             * it replaces the entire page content with the received HTML.
+             */
+             function sendAudioData() {
+                    const audioBlob = new Blob(combinedChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append('audio', audioBlob, 'audio.webm');
+                    // Append the data as fields in FormData
+                    formData.append('list1', JSON.stringify(expectedDuration));
+                    formData.append('list2', JSON.stringify(accualeDuration));
+
+                    fetch('/save-final-audio_mode_one', {
+                        method: 'POST',
+                        body: formData,
+
+                    })
+                    .then(response => {
+                        if(response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error("Failed to fetch from server");
+                        }
+                    })
+                    .then(html => {
+                        // This will replace the entire page content with the received HTML
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+          
+
+                /**
+                 * Displays the current text segment on the UI.
+                 * Based on the currentIndex, the relevant segment or segments (current and next) are displayed 
+                 * in the UI to guide the user on what to record next. It also handles formatting for line breaks.
+                 */ // Declare a global variable to keep track of the current video index.
+
+
+            function displaySentences(startIndex = 0, endIndex = num_lines) {
+                    // Ensure we don't go out of bounds
+                    endIndex = Math.min(endIndex, splitArray.length);
+                    
+                    // Display Sentences
+                    if (startIndex < splitArray.length) {
+                        let content = "";
+                        for (let i = startIndex; i < endIndex; i++) {
+                            if (splitArray[i]) {
+                                content += splitArray[i] + "<br>";
+                            }
+                        }
+                        document.getElementById('displayArea').innerHTML = content.replace(/\r\n/g, '<br>');
+                        expectedSegmentTime = calculateVTTCaptionDuration(content); // Assuming you have a function for this
+                        console.log('expected time is ', expectedSegmentTime);
+                    }
+
+                    // Update the currentIndex to match the endIndex
+                    currentIndex = endIndex;
+                    
+                    // Display Video if there is one in the list at the current index
+                    if (videosPsths && currentVideoIndex < videosPsths.length) {
+                        
+                        // Select the video section div
+                        const videoSection = document.querySelector('.video-section');
+                        
+                        // Clear previous video if there is one
+                        videoSection.innerHTML = '';
+                        
+                        // Create new video element
+                        const newVideoElement = document.createElement('video');
+                        newVideoElement.controls = true;
+                        // Set width and height using attributes
+                        newVideoElement.setAttribute('width', '320');
+                        newVideoElement.setAttribute('height', '240');
+
+                        // Create new source element and set its attributes
+                        const sourceElement = document.createElement('source');
+                        sourceElement.src = videosPsths[currentVideoIndex];
+                        sourceElement.type = 'video/mp4';
+
+                        // Append source to video element
+                        newVideoElement.appendChild(sourceElement);
+                        
+                        // Append video to video section
+                        videoSection.appendChild(newVideoElement);
+
+                        // Increment the current video index for the next call
+                        currentVideoIndex++;
+                    }
+                }
+
+            /**
+             * Updates the UI elements' state based on the current recording state.
+             * This function manages the interactive states (enabled or disabled) of the primary UI buttons.
+             * It ensures users cannot perform conflicting actions, like starting a recording when one is 
+             * already in progress or playing a recording during an active recording session.
+             */            
+            function updateButtonState() {
+                document.getElementById('startRecording').disabled = isRecording;
+                document.getElementById('stopRecording').disabled = !isRecording;
+                document.getElementById('play').disabled = !lastRecordingChunks.length || isRecording;
+                // document.getElementById('nextButton').textContent = (currentIndex >= splitArray.length - 2) ? 'Listen' : 'Next Sentences';
+                document.getElementById('nextButton').disabled = !lastRecordingChunks.length || isRecording;
+            }
+
+            // Event listeners
+            document.getElementById('startRecording').addEventListener('click', startRecording);
+            document.getElementById('stopRecording').addEventListener('click', function() {
+                stopSegmentTimer(); // Stop the segment timer
+
+                    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+            });
+           document.getElementById('play').addEventListener('click', play);
+            document.getElementById('nextButton').addEventListener('click', nextSegment);
+
+            // Initial setups
+             displaySentences();
+            currentIndex = num_lines;  // Update the current index to be the number of lines displayed
+            updateButtonState();
+
+    
+    </script>
+    
+</body>
+</html>

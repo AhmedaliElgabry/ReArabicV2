@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Basic Page Needs -->
+        <meta charset="utf-8">
+        <title>Transcription</title>
+      
+        <!-- Mobile Specific Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Corporate Html5 Template">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+        <meta name="author" content="Themefisher">
+        <meta name="generator" content="Themefisher Rearabic HTML Template v1.0">
+        
+            
+        <meta name="theme-name" content="Rearabic" />
+      
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/bootstrap/bootstrap.min.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/animate-css/animate.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fontawesome/css/all.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/fonts/Pe-icon-7-stroke.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/themify/css/themify-icons.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/slick-carousel/slick/slick.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='plugins/slick-carousel/slick/slick-theme.css') }}">
+      
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      
+      <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/x-icon">
+      
+        <!-- JS Scripts -->
+        <!-- ... (Your existing JS scripts) ... -->
+    </head>
+    <body class="bg-light">
+    <!-- NAVBAR
+    ================================================= -->
+    <nav class="navbar navbar-expand-lg navbar-dark trans-navigation fixed-top navbar-togglable">
+        <div class="container">
+          <a class="navbar-brand" href="index-3.html">
+            <h3>Rearabic</h3>
+          </a>
+          <!-- Toggler -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="fa fa-bars"></span>
+          </button>
+      
+          <!-- Collapse -->
+          <div class="collapse navbar-collapse has-dropdown" id="navbarCollapse">
+            <!-- Links -->
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#!" id="navbarWelcome" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  Home
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarWelcome">
+                  <li><a class="dropdown-item" href="index.html">Home-1</a></li>
+                  <li><a class="dropdown-item" href="index-2.html">Home-2</a></li>
+                  <li><a class="dropdown-item" href="index-3.html">Home-3</a></li>
+                  <li><a class="dropdown-item" href="index-4.html">Home-4</a></li>
+      
+                  <li class="dropdown dropdown-submenu dropright">
+                    <a class="dropdown-item dropdown-toggle" href="#!" id="dropdown0301" role="button"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub Menu</a>
+      
+                    <ul class="dropdown-menu" aria-labelledby="dropdown0301">
+                      <li><a class="dropdown-item" href="index.html">Submenu 01</a></li>
+                      <li><a class="dropdown-item" href="index.html">Submenu 02</a></li>
+                    </ul>
+                  </li>
+      
+                  <li class="dropdown dropdown-submenu dropleft">
+                    <a class="dropdown-item dropdown-toggle" href="#!" id="dropdown0301" role="button"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub Menu</a>
+      
+                    <ul class="dropdown-menu" aria-labelledby="dropdown0301">
+                      <li><a class="dropdown-item" href="index.html">Submenu 01</a></li>
+                      <li><a class="dropdown-item" href="index.html">Submenu 02</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item ">
+                <a href="about.html" class="nav-link js-scroll-trigger">
+                  About
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a href="service.html" class="nav-link js-scroll-trigger">
+                  Services
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a href="pricing.html" class="nav-link js-scroll-trigger">
+                  Pricing
+                </a>
+              </li>
+      
+              <li class="nav-item ">
+                <a href="project.html" class="nav-link js-scroll-trigger">
+                  Projects
+                </a>
+              </li>
+      
+              <li class="nav-item ">
+                <a href="contact.html" class="nav-link">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div> <!-- / .navbar-collapse -->
+        </div> <!-- / .container -->
+      </nav>
+    
+        <!-- HERO -->
+<section class="page-banner-area page-about">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-md-12 col-12 text-center">
+                <div class="page-banner-content">
+                    <h1 class="display-4 font-weight-bold">Professional Voice-Over Services</h1>
+                    <p>Enhance your projects with high-quality voice-overs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="container mt-5 mb-5">
+    <h1 class="text-center">Transcription Result</h1>
+
+    <!-- Original Text and Combined Form -->
+    <div class="row justify-content-center mt-4">
+        <!-- Transcription Box -->
+<div class="col-md-6 font-size: 2em">
+    <div class="card">
+        <div class="card-header text-center bg-primary text-white">Original Text</div>
+        <div class="card-body text-center">
+            <div class="transcription-box p-3  id="transcription-box">
+                {% for segment in original_text if segment != 'WEBVTT' %}
+                    {% set lines = segment.split('\n') %}
+                    {% set time = lines[0] %}
+                    {% set text = lines[1:]|join(' ') %}
+                    <div class="mb-3">
+                        <span class="badge" style="background-color: #fff; color: #000;">{{ time }}</span><br>
+                        <p class="text-center">{{ text }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ... -->
+
+
+        <!-- Combined Form -->
+        <div class="col-md-6">
+            <div class="form-container">
+                <form action="/recording_combined" method="post">
+                    <div class="mb-3">
+                        <label for="recordingMode" class="form-label">Choose a recording option:</label>
+                        <select name="recordingMode" id="recordingMode" class="form-control">
+                            <option value="mode1">Option One - Adaptive Recording Time</option>
+                            <option value="mode2">Option Two - Fixed Recording Time</option>
+                        </select>
+                        <small id="recordingModeHelp" class="form-text text-muted">
+                            <ul>
+                                <li><strong>Option One - Adaptive Recording Time:</strong> Your recording time will not be adjusted. If it doesn't align with the video's time frame, it will remain as is.</li>
+                                <li><strong>ption Two - Fixed Recording Time:</strong> Uses a Python library to automatically extend or shrink your recording to fit the video's time frame.</li>
+                            </ul>
+                        </small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="numLines" class="form-label">Number of lines:</label>
+                        <input type="number" class="form-control" name="numLines" min="3" max="9">
+                        <small id="numLinesHelp" class="form-text text-muted">
+                            This will determine the number of lines displayed for each transcription segment.
+                        </small>
+                    </div>
+                    
+                    <input type="hidden" name="segments" value="{{ original_text|join('||') }}">
+                    <button class="btn btn-primary btn-lg">Start Recording</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+    <footer class="section " id="footer">
+        <div class="overlay footer-overlay"></div>
+        <!--Content -->
+        <div class="container">
+          <div class="row justify-content-start">
+            <div class="col-lg-4 col-sm-12">
+              <div class="footer-widget">
+                <!-- Brand -->
+                <a href="index.html" class="footer-brand text-white">
+                    Rearabic
+                </a>
+                <p>Each theme featured at the Bootstrap marketplace has been reviewed by Bootstrap's creators.Lorem ipsum
+                  dolor sit amet, consectetur adipisicing elit.</p>
+              </div>
+            </div>
+     
+            <div class="col-lg-3 ml-lg-auto col-sm-12">
+              <div class="footer-widget">
+                <h3>Account</h3>
+                <!-- Links -->
+                <ul class="footer-links ">
+                  <li>
+                    <a href="#!">
+                      Terms and conditions
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Privacy policy
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Affiliate services
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Help and support
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!">
+                      Frequently Asked Question
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+     
+     
+            <div class="col-lg-2 col-sm-6">
+              <div class="footer-widget">
+                <h3>About</h3>
+                <!-- Links -->
+                <ul class="footer-links">
+                 <li>
+                   <a href="about.html">
+                     About Us
+                   </a>
+                 </li>
+                  <li>
+                    <a href="service.html">
+                      Services
+                    </a>
+                  </li>
+                  <li>
+                    <a href="pricing.html">
+                      Pricing
+                    </a>
+                  </li>
+                  <li>
+                    <a href="project.html">
+                     Recent Projects
+                    </a>
+                  </li>
+     
+                  <li>
+                    <a href="contact.html">
+                      Contact
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+     
+            <div class="col-lg-2 col-sm-6">
+              <div class="footer-widget">
+                <h3>Socials</h3>
+                <!-- Links -->
+                <ul class="list-unstyled footer-links">
+                  <li><a href="https://www.facebook.com/themefisher"><i class="fab fa-facebook-f"></i>Facebook</a></li>
+                  <li>
+                    <a href="https://www.twitter.com/themefisher"><i class="fab fa-twitter"></i>Twitter
+                    </a></li>
+                  <li><a href="https://www.pinterest.com/themefisher/"><i class="fab fa-pinterest-p"></i>Pinterest
+                    </a></li>
+                  <li><a href="https://themefisher.com/"><i class="fab fa-linkedin"></i>linkedin
+                    </a></li>
+                  <li><a href="https://www.youtube.com/channel/UCx9qVW8VF0LmTi4OF2F8YdA"><i class="fab fa-youtube"></i>YouTube
+                    </a></li>
+                </ul>
+              </div>
+            </div>
+          </div> <!-- / .row -->
+     
+     
+          <div class="row text-right pt-5">
+            <div class="col-lg-12">
+              <div class="overflow-hidden">
+                <!-- Copyright -->
+               <p class="footer-copy">
+                 Copyright &copy; <script>var CurrentYear = new Date().getFullYear()
+                 document.write(CurrentYear)
+               </script>. Designed &amp; Developed by <a class="current-year" href="https://themefisher.com/">Themefisher</a>
+               </p>
+              </div>
+            </div>
+          </div> <!-- / .row -->
+        </div> <!-- / .container -->
+      </footer>
+     
+  <!-- jQuery -->
+  <script src="{{ url_for('static', filename='plugins/jquery/jquery.min.js') }}"></script>
+  <!-- Bootstrap -->
+  <script src="{{ url_for('static', filename='plugins/bootstrap/bootstrap.min.js') }}"></script>
+  <!-- Slick Slider -->
+  <script src="{{ url_for('static', filename='plugins/slick-carousel/slick/slick.min.js') }}"></script>
+  
+  <!-- Your custom JavaScript -->
+  <script src="{{ url_for('static', filename='js/script.js') }}">
+
+  </script>
+</body>
+</html>
