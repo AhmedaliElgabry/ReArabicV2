@@ -1,4 +1,0 @@
-'ffmpeg -i "videos\\WhatsApp Video 2023-08-20 at 5.39.42 PM - Copy (3).mp4" -t 5 -an -c:v copy before_insert.mp4'
-'ffmpeg -i "videos\\WhatsApp Video 2023-08-20 at 5.39.42 PM - Copy (3).mp4" -ss 5 -an -c:v copy after_insert.mp4'
-
-
