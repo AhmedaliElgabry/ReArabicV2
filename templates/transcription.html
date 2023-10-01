@@ -136,17 +136,17 @@
     <div class="card">
         <div class="card-header text-center bg-primary text-white">Original Text</div>
         <div class="card-body text-center">
-            <div class="transcription-box p-3  id="transcription-box">
-                {% for segment in original_text if segment != 'WEBVTT' %}
-                    {% set lines = segment.split('\n') %}
-                    {% set time = lines[0] %}
-                    {% set text = lines[1:]|join(' ') %}
-                    <div class="mb-3">
-                        <span class="badge" style="background-color: #fff; color: #000;">{{ time }}</span><br>
-                        <p class="text-center">{{ text }}</p>
-                    </div>
-                {% endfor %}
-            </div>
+            <div class="transcription-box p-3" id="transcription-box">
+            {% for segment in original_text if segment != 'WEBVTT' %}
+                {% set lines = segment.split('\n') %}
+                {% set time = lines[0] %}
+                {% set text = lines[1:]|join(' ') %}
+                <div class="mb-3">
+                    <span class="badge" style="background-color: #fff; color: #000;">{{ time }}</span><br>
+                    <p class="text-center" style="direction: rtl; unicode-bidi: embed;">{{ text }}</p>
+                </div>
+            {% endfor %}
+        </div>
         </div>
     </div>
 </div>
