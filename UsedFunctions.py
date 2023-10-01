@@ -1186,9 +1186,10 @@ def get_gpt_translation(input):
         "content": '''
         You are a skilled translator with a specific task. You will be given a list of English sentences. For each and every sentence in the list:
         1) Translate it into Egyptian Arabic ammiya (بالعامية المصرية).
-        2) Ensure the translated list is of the SAME length as the input list.
-        3) Provide a summary of the entire content in Egyptian Arabic ammiya (بالعامية المصرية).
-        4) Important: Ensure that your response is in a valid and well-formed JSON format. Do not skip any sentences and make sure there are no missing or extra commas, brackets, or other characters that can break the JSON format.
+        2) If there's an English term, name, or phrase within a sentence, it MUST remain in the EXACT same position as in the original English sentence. Do not rearrange any words around it. 
+        3) Ensure the translated list is of the SAME length as the input list.
+        4) Provide a summary of the entire content in Egyptian Arabic ammiya (بالعامية المصرية), also MAINTAINING the original order of the content.
+        5) Important: Ensure that your response is in a valid and well-formed JSON format. Do not skip any sentences and make sure there are no missing or extra commas, brackets, or other characters that can break the JSON format.
 
         Example: 
         Input: ["Hello", "How are you?", "Thank you"]
@@ -1209,7 +1210,7 @@ def get_gpt_translation(input):
         temperature=0,
     functions = [
    {
-    "name": "translation_list_with_example_v5",  # Incremented version for clarity
+    "name": "translation_list_with_example_v6",  # Incremented version for clarity
     "description": "Translate EACH item from the given list of English content to Egyptian Arabic ammiya (بالعامية المصرية). The returned translation list MUST have the same length as the input list, ensuring a direct 1:1 correspondence. If a translation for a specific item isn't possible, the original item should be returned in its place. **Important: Ensure that the response is in a valid and well-formed JSON format.**",
     "parameters": {
         "type": "object",
@@ -1235,7 +1236,7 @@ def get_gpt_translation(input):
 
 ,
 
-        function_call={"name": "translation_list_with_example_v5"},
+        function_call={"name": "translation_list_with_example_v6"},
     )
 
     reply_content = response.choices[0].message
