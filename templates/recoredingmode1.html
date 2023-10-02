@@ -611,6 +611,8 @@
                             }
                         }
                         document.getElementById('displayArea').innerHTML = content.replace(/\r\n/g, '<br>');
+                        displayArea.style.direction = "rtl";
+                        displayArea.style.unicodeBidi = "embed";
                         expectedSegmentTime = calculateVTTCaptionDuration(content); // Assuming you have a function for this
                         console.log('expected time is ', expectedSegmentTime);
                     }
