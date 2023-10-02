@@ -617,6 +617,8 @@
                         }
                         document.getElementById('displayArea').innerHTML = content.replace(/\r\n/g, '<br>');
                         expectedSegmentTime = calculateVTTCaptionDuration(content); 
+                        displayArea.style.direction = "rtl";
+                        displayArea.style.unicodeBidi = "embed";
                         console.log('expected time is ', expectedSegmentTime);
                         document.getElementById('ExpectedTime').textContent = formatTime(expectedSegmentTime);
                     }
